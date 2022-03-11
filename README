@@ -1,0 +1,178 @@
+Dumitrescu Alexandra
+323 CA, ACS UPB
+Tema #1 - Analiza Algoritmilor
+Noiembrie 2021
+
+_______________________
+
+Range Minimum Query
+_______________________
+
+
+A. Deinitia Problemei & Aspecte Relevante
+
+	1. 	Definitia RMQ:
+
+		| Dandu-se un vector de N elemente si M interogari de forma [x, y]
+		| sa se raspunda la intrebarea: "Care este cel mai mic element din
+		| intervalul [x, y] ?".
+
+	2.	Definitia RMQ-UPDATE:
+
+		| Ne-am propus sa studiem si varianta-online a problemei propuse.
+		| Redefinim problema update-urilor, atfel: Dandu-se un vector de
+		| N elemente sa se simuleze M comenzi asupra vectorului.
+		| Comenzile se codifica astfel:
+
+		| Q:	Q a b -> "Care este cel mai mic element din intervalul [a b]?"
+		| U:  	U idx value -> "Modifica elementul de la pozitia idx cu value"
+
+	3. 	Aspecte relevante:
+
+		| 3.1 	In queries [x, y] - x, y se considera indexate de la 1.
+		|		Ex:	Q 1 2 -> Minimul dintre primele 2 elemente din vector
+		|
+		| 3.2 	Cele 2 probleme vor fi studiate separat, in sensul ca sunt
+		|		implementate separat, cu teste proprii menite sa le testeze
+		|		corectitudinea & eficienta din aspecte diferite.
+		|		Mai multe in: Sectiunile <B>, <C>
+		|
+		| 3.3 	In cadrul update-urilor, se trateaza doar problema
+		|		update-urilor singulare, nu si a update-urilor pe intervale.
+
+
+B. Solutii propuse
+
+	|	1. Square Root Decomposition
+	|	2. Sparse Table
+	|	3. Segment Trees
+	
+	Pentru fiecare algoritm s-au adaugat explicatii referitoare la implementare
+	si la modul de functionare al algoritmului in sine in cadrul fisierelor
+	sursa. Pentru mai multe detalii: vezi si comentarii fisiere .c
+
+
+C. Arhiva
+
+	./ |-> p1.c - contine implementarea pentru Square root Decomposition
+	   |-> p2.c - contine implementarea pentru Sparse Table
+	   |-> p3.c - contine implementarea pentru Segment Trees
+	   |-> in   - directorul cu 75 de teste .in
+	   |-> out  - directorul cu 75 de teste .out
+	   |-> generator - contine generator + README cu detalii relevante
+	   |				  despre acesta
+	   |-> math_utils.c & math_utils.c - contine functii auxiliare
+	   |								 precum sqrt, min, log2
+	   |
+	   |-> updates - folder unde se gasesc implementari pentru UPDATES
+	   		|
+	   		|__  
+	   		|	p1.c - aceleasi functionalitati + updates + parsarea comenzilor
+	   		|	
+	   		|__ p2.c - IDEM
+	   		|
+	   		|__	p3.c - IDEM
+	   		|
+	   		|__ README + in + out + generator
+
+
+D. Generator Teste
+
+	1. Criterii majore pe care le-am urmarit
+
+		|	A.	Dimensiunea datelor de intrare (N, M)
+		|	B.  Ordinea elementelor din vectorul de intrare
+		|	C.  Intervalele generate
+
+	2.	Ierarhie Teste
+
+
+	SHORT  = 100     = 10^2
+	MEDIUM = 10000   = 10^4
+	LARGE  = 1000000 = 10^6
+
+
+
+|  Nr. test | Dimensiuni date |      Ordonare			|	Intervale   |
+|________________________________________________________________________
+|
+|	[1, 15]    N - SHORT 		-- random    [1, 5]  	--  mici   [1]
+|			   M - SHORT					  	   		--  mari   [2]
+|	   					 		-- crescator [6, 10]    --  mici   [6]
+|												   		--  mari   [7]
+|	   					 		-- descrescator [11, 15]--  mici   [11]
+|												   		--  mari   [12]
+|	[16, 30]   N - MEDIUM  	    -- random	[16, 20]   	--  mici   [16]
+|			   M - MEDIUM								--  mari   [17]
+|								-- crescator [21, 25]   --  mici   [21]
+|														--  mari   [22]
+|								-- descrescator [26, 30]--  mici   [26]
+|														--  mari   [27]
+|	[31, 45]   N - LARGE		-- random    [31, 35]   --  mici   [31]
+|			   M - MEDIUM								--  mari   [32]
+|								-- crescator [36, 40]   --  mici   [36]
+|														--  mari   [37]
+|								-- descrescator [41, 45]--  mici   [41]
+|														--  mari   [42]
+|	[46, 60]   N - MEDIUM		-- random [46, 50]      --  mici   [46]
+|			   M - LARGE							    --  mari   [47]
+|								-- crescator [51, 55]   --  mici   [51]
+|													    --  mari   [52]
+|								-- descrescator [56, 60]--  mici   [56]
+|														--  mari   [57]
+|	[61, 75]   N - LARGE		-- random [61, 65]      --  mici   [61]
+|			   M - LARGE								--  mari   [62]
+|								-- crescator [66, 70]	--  mici   [66]
+|														--  mari   [67]
+|								-- descrescator [71, 75]--  mici   [71]
+|														--  mari   [72]
+
+	Un alt criteriu auxiliar ar fi dimensiunea datelor din vectorul
+	de intrare. Astfel, am procedat:
+
+	|	[1, 30] - valori SHORT			(1)
+	|	[31, 50] - valori MEDIUM
+	|	[51, 75] - valori LARGE 
+
+	Pentru a genera valori random, ne-am folosit de functia rand() si
+	am fortat elementele sa ia o valoare maxima pe care ne-am dorit-o.
+
+	Pentru a putea testa gradual cele 3 programe, generatorul propus
+	se foloseste de solutia banala pentru a genera fisierele din .out
+	In final, rezultatele celor 3 solutii + solutia banala trebuie sa
+	coincida pe toate testele propuse. Vezi si: README generator
+
+	Pentru mai multe detalii despre implementarea generatorului
+	vezi si: README checker
+
+	3.	OTHER CORNER CASES:
+
+		1.	Avand in vedere (1) si ca in testele [16, 30] N si M sunt de
+		dimensiune MEDIUM -> vor rezulta date de intrare din vector care 
+		se repeta abundent. Studiem cum se comporta algoritmii pe vectori
+		in care elementele se repeta
+
+		2.	Extindem 1. si luam un test in care tot vectorul este constant
+		adica test77.in
+
+		3.	Verificam corectitudinea algoritmilor si pe un test case in
+		care numarul de queries este nul, in test76.in
+
+
+E. Mentiuni
+
+	1.  Am verificat prima solutie (Square Root Decomposition) pe
+		platforma infoarena. Am anuntat pe forum problema si atasez
+		link catre solutia care s-a postat public.
+
+		LINK:	https://www.infoarena.ro/job_detail/2800928
+		CONT: 	ad2708
+		DATA:	14.Nov.2021
+
+	2.  Link-uri utile care m-au ajutat in implementare
+
+R1: https://www.geeksforgeeks.org/range-minimum-query-for-static-array/
+R2: https://www.geeksforgeeks.org/sqrt-square-root-decomposition-technique-set-1-introduction/
+R3: https://www.geeksforgeeks.org/range-sum-queries-and-update-with-square-root/?ref=rp
+R4: https://www.geeksforgeeks.org/segment-tree-set-1-range-minimum-query/
+
